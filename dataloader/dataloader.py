@@ -4,8 +4,8 @@ from .data_util import *
 class DataLoader(object):
     def __init__(self, dataset_name, input_size = 4525*9, output_dim = 4525*9,  is_train = True, is_normalize = True):
         self.dataset_name = dataset_name
-        self.input_size = 4525*9
-        self.output_dim = 4525*9
+        self.input_size = input_size
+        self.output_dim = output_dim
         if is_train:
             self.dataset = np.load(('data/{}/train.npy').format(dataset_name))
         else:
