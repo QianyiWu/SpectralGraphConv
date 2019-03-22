@@ -4,7 +4,7 @@ Created on Mar 21, 2019
 
 @author: wqy
 """
-from keras.layers import Reshape, LeakyRelu, Flatten, Activation, Input, Concatenate, Add
+from keras.layers import Reshape, LeakyReLU, Flatten, Activation, Input, Concatenate, Add
 from keras.layers import Dense, Lambda, BatchNormalization
 from keras.models import Model
 import keras.backend as K
@@ -25,7 +25,7 @@ def sampling(args):
 	epsilon = K.random_normal(shape=(batch, dim))
 	return z_mean + K.exp(0.5 * z_log_var) * epsilon
 
-def network(T_k, support = 3, batch_size = 1, v = 11510, feature_dim = 9, input_dim = 11510 * 9, output_dim = 9499*9, vis = False, hidden_dim = 300,latent_dim = 25):
+def network(T_k, support = 3, batch_size = 1, v = 11510, feature_dim = 9, input_dim = 11510 * 9, output_dim = 9499*9, vis = True, hidden_dim = 300,latent_dim = 25):
     g = [K.variable(_) for _ in T_k]
     def gcn(x):
         supports = list()
@@ -62,14 +62,14 @@ def network(T_k, support = 3, batch_size = 1, v = 11510, feature_dim = 9, input_
     # note that "output_shape" isn't necessary with the TensorFlow backend
     z = Lambda(sampling, output_shape=(latent_dim,), name='z')([z_mean, z_log_var])
     
-    encoder = Model(inputs,[z_mean, z_log_var, z], name = 'exp_encoder')
+    encoder = Model(inputs,[z_mean, z_log_var, z], name = 'encoder')
     code = Input(shape=(latent_dim, ))
     x = Dense(hidden_dim)(code)
     x = LeakyReLU(alpha=0.1)(x)
     x = Dense(output_dim)(x)
     output = Activation('tanh')(x)
 
-    decoder = Model(code, output)
+    decoder = Model(code, output, name = 'decoder')
     output = decoder(encoder(inputs)[2])
     gcn_vae = Model(inputs, output)
     if vis:
