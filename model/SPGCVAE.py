@@ -14,16 +14,15 @@ from .basic_function import *
 
 class SPGCVAE(object):
 
-    def __init__(self, input_dim, output_dim, prefix, suffix, lr, load, feature_dim=9, latent_dim=25, kl_weight=0.000005, batch_size=1, MAX_DEGREE=2):
+    def __init__(self, input_dim, output_dim, prefix, lr, load, feature_dim=9, latent_dim=25, kl_weight=0.000005, batch_size=1, MAX_DEGREE=2):
         self.input_dim = input_dim
         self.output_dim = output_dim
-        self.prefix = prefix
-        self.suffix = suffix
         self.load = load
         self.latent_dim = latent_dim
         self.feature_dim = feature_dim
         self.v = int(input_dim / feature_dim)
         self.out_v = int(output_dim / feature_dim)
+        self.prefix = prefix
         self.hidden_dim = 300
         self.lr = lr
         self.M_list = np.load(('data/{}/max_data.npy').format(self.prefix))
@@ -38,7 +37,7 @@ class SPGCVAE(object):
         L = normalized_laplacian(A, SYM_NORM)
         T_k = chebyshev_polynomial(rescale_laplacian(L), MAX_DEGREE)
         support = MAX_DEGREE + 1
-        _, self.encoder, self.decoder, self.gcn_vae = network(T_k, support, batch_size=self.batch_size, \
+        self.encoder, self.decoder, self.gcn_vae = network(T_k, support, batch_size=self.batch_size, \
                                                                           feature_dim=self.feature_dim, v=self.v, \
                                                                           input_dim=self.input_dim, output_dim = self.output_dim)
          

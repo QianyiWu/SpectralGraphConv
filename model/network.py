@@ -74,9 +74,7 @@ def network(T_k, support = 3, batch_size = 1, v = 11510, feature_dim = 9, input_
     gcn_vae = Model(inputs, output)
     if vis:
         gcn_vae.summary()
-    kl_loss = 1 + z_log_var - K.square(z_mean) - K.exp(z_log_var)
-    kl_loss = K.mean(K.abs(K.sum(kl_loss, axis=-1)))
-    return kl_loss, encoder, decoder, gcn_vae
+    return encoder, decoder, gcn_vae
 
 
 

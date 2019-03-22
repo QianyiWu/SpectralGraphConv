@@ -17,7 +17,6 @@ class DataLoader(object):
             normalize_fromfile(self.dataset, M_list, m_list)
         else:
             pass
-        print(self.dataset)
 
 
     def dataset_info(self):
